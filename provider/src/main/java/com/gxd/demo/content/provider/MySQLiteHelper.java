@@ -8,10 +8,10 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by guoxiaodong on 2019-06-17 16:03
  */
 public class MySQLiteHelper extends SQLiteOpenHelper {
-    public static final String PERSON_TABLE_NAME = "person";
-    public static final String JOB_TABLE_NAME = "job";
+    static final String PERSON_TABLE_NAME = "person";
+    static final String JOB_TABLE_NAME = "job";
 
-    public MySQLiteHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    MySQLiteHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 

@@ -5,10 +5,12 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
@@ -37,7 +39,12 @@ public class MainActivity extends Activity {
         Uri personParse = Uri.parse("content://com.gxd.demo.content.provider/person");
         ContentValues contentValues = new ContentValues();
         ContentResolver contentResolver = getContentResolver();
-
+        contentResolver.registerContentObserver(personParse, true, new ContentObserver(new Handler()) {
+            @Override
+            public void onChange(boolean selfChange, Uri uri) {
+                Log.d("gxd", "onChange-->" + uri.toString());
+            }
+        });
         contentValues.clear();
         contentValues.put("name", "guoxiaodong");
         contentValues.put("age", "28");
