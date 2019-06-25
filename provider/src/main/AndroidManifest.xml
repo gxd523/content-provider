@@ -1,0 +1,17 @@
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.gxd.demo.content.provider">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="provider"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
+        <provider
+            android:name=".MyProvider"
+            android:authorities="com.gxd.demo.content.provider"
+            android:exported="true" />
+    </application>
+</manifest>
