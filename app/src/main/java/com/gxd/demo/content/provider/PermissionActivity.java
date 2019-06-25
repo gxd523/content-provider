@@ -31,7 +31,6 @@ public class PermissionActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
         mPermissions = getIntent().getStringArrayExtra(EXTRA_PERMISSIONS);
         if (mPermissions != null && mPermissions.length > 0) {
             checkPermission(mPermissions);
