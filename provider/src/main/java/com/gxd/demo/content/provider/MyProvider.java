@@ -7,6 +7,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.util.Log;
 
 /**
  * Created by guoxiaodong on 2019-06-25 16:03
@@ -23,14 +24,15 @@ public class MyProvider extends ContentProvider {
         mReadableDatabase = new MySQLiteHelper(getContext(), "demo.db", null, 1).getReadableDatabase();
 
         mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        mUriMatcher.addURI(AUTHORITY, "person", PersonCode);
-        mUriMatcher.addURI(AUTHORITY, "job", JobCode);
+        mUriMatcher.addURI(AUTHORITY, MySQLiteHelper.PERSON_TABLE_NAME, PersonCode);
+        mUriMatcher.addURI(AUTHORITY, MySQLiteHelper.JOB_TABLE_NAME, JobCode);
         return true;
     }
 
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        Log.d("gd", "query-->" + uri);
         String tableName = getTableName(uri);
         return mReadableDatabase.query(tableName, projection, selection, selectionArgs, null, null, sortOrder, null);
     }
@@ -45,6 +47,7 @@ public class MyProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
+        Log.d("gd", "insert-->" + uri + "..." + values);
         String tableName = getTableName(uri);
         mReadableDatabase.insert(tableName, null, values);
         Context context = getContext();

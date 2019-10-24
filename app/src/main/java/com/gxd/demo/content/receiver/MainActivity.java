@@ -1,10 +1,7 @@
 package com.gxd.demo.content.receiver;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -13,38 +10,44 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import android.util.Log;
-import android.widget.Toast;
 
-public class MainActivity extends Activity {
-    private static final int MAIN_REQUEST_CODE = 336;
-
+public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PermissionActivity.startActivityForResult(new String[]{
-                    Manifest.permission.READ_CONTACTS,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.READ_PHONE_STATE,
-                    Manifest.permission.RECEIVE_SMS,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-            }, MainActivity.this, MAIN_REQUEST_CODE);
-        } else {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             readContacts();
         }
 
-        Uri personParse = Uri.parse("content://com.gxd.demo.content.provider/person");
-        ContentValues contentValues = new ContentValues();
         ContentResolver contentResolver = getContentResolver();
+        Uri personParse = Uri.parse("content://com.gxd.demo.content.provider/person");
         contentResolver.registerContentObserver(personParse, true, new ContentObserver(new Handler()) {
             @Override
             public void onChange(boolean selfChange, Uri uri) {
-                Log.d("gxd", "onChange-->" + uri.toString());
+                Log.d("gd", "onChange-->" + uri.toString());
             }
         });
+
+        insertData(contentResolver, personParse);
+        queryData(contentResolver, personParse);
+    }
+
+    private void queryData(ContentResolver contentResolver, Uri personParse) {
+        Cursor cursor = contentResolver.query(personParse, new String[]{"name", "age", "bmi"}, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                Log.d("gd", "query result-->" + cursor.getString(0) + "...." + cursor.getInt(1) + "..." + cursor.getDouble(2));
+            }
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+    }
+
+    private void insertData(ContentResolver contentResolver, Uri personParse) {
+        ContentValues contentValues = new ContentValues();
         contentValues.clear();
         contentValues.put("name", "guoxiaodong");
         contentValues.put("age", "28");
@@ -62,28 +65,6 @@ public class MainActivity extends Activity {
         contentValues.put("age", "25");
         contentValues.put("bmi", 23.3);
         contentResolver.insert(personParse, contentValues);
-
-        Cursor cursor = contentResolver.query(personParse, new String[]{"name", "age", "bmi"}, "age>23", null, null);
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                Log.d("gxd", "query result-->" + cursor.getString(0) + "...." + cursor.getInt(1) + "..." + cursor.getDouble(2));
-            }
-        }
-        if (cursor != null) {
-            cursor.close();
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == MAIN_REQUEST_CODE && resultCode == PermissionActivity.PERMISSION_RESULT_CODE) {
-            boolean isAllPermissionsGranted = data.getBooleanExtra(PermissionActivity.EXTRA_PERMISSION_RESULT, false);
-            if (isAllPermissionsGranted) {
-                readContacts();
-            } else {
-                Toast.makeText(this, "权限获取失败!", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     private void readContacts() {
@@ -102,7 +83,7 @@ public class MainActivity extends Activity {
             );
             while (cursor1 != null && cursor1.moveToNext()) {
                 String phone = cursor1.getString(cursor1.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                Log.d("gxd", name + ":" + phone);
+                Log.d("gd", name + ":" + phone);
             }
             if (cursor1 != null) {
                 cursor1.close();
@@ -111,5 +92,10 @@ public class MainActivity extends Activity {
         if (cursor != null) {
             cursor.close();
         }
+    }
+
+    @Override
+    protected void onPermissionGranted() {
+        readContacts();
     }
 }
