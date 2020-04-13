@@ -1,11 +1,11 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.gxd.demo.content.provider">
+    package="com.demo.content.provider">
 
     <application>
         <provider
             android:name=".MyProvider"
-            android:authorities="com.gxd.demo.content.provider"
+            android:authorities="com.demo.content.provider"
             android:exported="true" />
     </application>
 </manifest>

@@ -1,4 +1,4 @@
-package com.gxd.demo.content.provider;
+package com.demo.content.provider;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -13,7 +13,7 @@ import android.util.Log;
  * Created by guoxiaodong on 2019-06-25 16:03
  */
 public class MyProvider extends ContentProvider {
-    private static final String AUTHORITY = "com.gxd.demo.content.provider";
+    private static final String AUTHORITY = "com.demo.content.provider";
     private static final int PersonCode = 387;
     private static final int JobCode = 77;
     private UriMatcher mUriMatcher;
@@ -32,7 +32,7 @@ public class MyProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        Log.d("gd", "query-->" + uri);
+        Log.d("gxd", "query-->" + uri);
         String tableName = getTableName(uri);
         return mReadableDatabase.query(tableName, projection, selection, selectionArgs, null, null, sortOrder, null);
     }
@@ -47,7 +47,7 @@ public class MyProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        Log.d("gd", "insert-->" + uri + "..." + values);
+        Log.d("gxd", "insert-->" + uri + "..." + values);
         String tableName = getTableName(uri);
         mReadableDatabase.insert(tableName, null, values);
         Context context = getContext();

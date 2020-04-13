@@ -1,4 +1,4 @@
-package com.gxd.demo.content.receiver;
+package com.demo.content.receiver;
 
 import android.app.Activity;
 import android.app.AlertDialog;

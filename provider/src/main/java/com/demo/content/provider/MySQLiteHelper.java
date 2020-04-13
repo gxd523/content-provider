@@ -1,4 +1,4 @@
-package com.gxd.demo.content.provider;
+package com.demo.content.provider;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -19,7 +19,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
      * 验证:
      * adb shell
      * su(#)
-     * sqlite3 /data/data/com.gxd.demo/databases/person.db
+     * sqlite3 /data/data/com.demo/databases/person.db
      * .tables
      */
     @Override
