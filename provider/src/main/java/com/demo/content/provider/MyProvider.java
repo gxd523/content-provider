@@ -13,7 +13,7 @@ import android.util.Log;
  * Created by guoxiaodong on 2019-06-25 16:03
  */
 public class MyProvider extends ContentProvider {
-    private static final String AUTHORITY = "com.demo.content.provider";
+    private static final String AUTHORITY = "a.b.c.MyProvider";
     private static final int PersonCode = 387;
     private static final int JobCode = 77;
     private UriMatcher mUriMatcher;

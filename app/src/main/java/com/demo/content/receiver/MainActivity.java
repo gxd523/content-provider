@@ -1,51 +1,38 @@
 package com.demo.content.receiver;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends Activity {
+    private ContentResolver contentResolver;
+    private Uri personParse;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            readContacts();
-        }
-
-        ContentResolver contentResolver = getContentResolver();
-        Uri personParse = Uri.parse("content://com.demo.content.provider/person");
+        contentResolver = getContentResolver();
+        personParse = Uri.parse("content://a.b.c.MyProvider/person");
         contentResolver.registerContentObserver(personParse, true, new ContentObserver(new Handler()) {
             @Override
             public void onChange(boolean selfChange, Uri uri) {
                 Log.d("gxd", "onChange-->" + uri.toString());
             }
         });
-
-        insertData(contentResolver, personParse);
-        queryData(contentResolver, personParse);
     }
 
-    private void queryData(ContentResolver contentResolver, Uri personParse) {
-        Cursor cursor = contentResolver.query(personParse, new String[]{"name", "age", "bmi"}, null, null, null);
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                Log.d("gxd", "query result-->" + cursor.getString(0) + "...." + cursor.getInt(1) + "..." + cursor.getDouble(2));
-            }
-        }
-        if (cursor != null) {
-            cursor.close();
-        }
-    }
-
-    private void insertData(ContentResolver contentResolver, Uri personParse) {
+    public void onInsertClick(View view) {
         ContentValues contentValues = new ContentValues();
         contentValues.clear();
         contentValues.put("name", "guoxiaodong");
@@ -64,6 +51,26 @@ public class MainActivity extends BaseActivity {
         contentValues.put("age", "25");
         contentValues.put("bmi", 23.3);
         contentResolver.insert(personParse, contentValues);
+    }
+
+    public void onQueryClick(View view) {
+        StringBuilder stringBuilder = new StringBuilder();
+        Cursor cursor = contentResolver.query(personParse, new String[]{"name", "age", "bmi"}, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                stringBuilder.append("query result-->")
+                        .append(cursor.getString(0))
+                        .append("....")
+                        .append(cursor.getInt(1))
+                        .append("...")
+                        .append(cursor.getDouble(2))
+                        .append("\n");
+            }
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        ((TextView) findViewById(R.id.activity_main_text_view)).setText(stringBuilder);
     }
 
     private void readContacts() {
@@ -92,10 +99,5 @@ public class MainActivity extends BaseActivity {
         if (cursor != null) {
             cursor.close();
         }
-    }
-
-    @Override
-    protected void onPermissionGranted() {
-        readContacts();
     }
 }
